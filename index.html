@@ -24,8 +24,8 @@
         const player = document.getElementById('player');
         
         if (videoId) {
-            // This will work because we're on a real website domain
-            player.src = "https://www.youtube.com/embed/" + videoId + "?autoplay=1&rel=0&modestbranding=1";
+            // NO AUTOPLAY - user must click to start
+            player.src = "https://www.youtube.com/embed/" + videoId + "?rel=0&modestbranding=1";
             player.style.display = 'block';
             loading.style.display = 'none';
         } else {
