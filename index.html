@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>YouTube Clean Player</title>
+    <title>Loading...</title>
+    <link rel="icon" type="image/png" href="https://www.youtube.com/favicon.ico">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: #000; font-family: Arial, sans-serif; }
@@ -23,14 +24,35 @@
         const loading = document.getElementById('loading');
         const player = document.getElementById('player');
         
-        if (videoId) {
-            // NO AUTOPLAY - user must click to start
-            player.src = "https://www.youtube.com/embed/" + videoId + "?rel=0&modestbranding=1";
-            player.style.display = 'block';
-            loading.style.display = 'none';
-        } else {
-            loading.innerHTML = 'No video ID found. Go to a YouTube video first.';
+        async function fetchVideoTitle(videoId) {
+            try {
+                // Use YouTube oEmbed to get video title
+                const response = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`);
+                const data = await response.json();
+                return data.title;
+            } catch (error) {
+                console.log('Could not fetch video title:', error);
+                return `YouTube Video ${videoId}`;
+            }
         }
+        
+        async function loadVideo() {
+            if (videoId) {
+                // Fetch and set the video title
+                const videoTitle = await fetchVideoTitle(videoId);
+                document.title = videoTitle;
+                
+                // Load the player
+                player.src = "https://www.youtube.com/embed/" + videoId + "?rel=0&modestbranding=1";
+                player.style.display = 'block';
+                loading.style.display = 'none';
+            } else {
+                loading.innerHTML = 'No video ID found. Go to a YouTube video first.';
+                document.title = 'YouTube Clean Player';
+            }
+        }
+        
+        loadVideo();
     </script>
 </body>
 </html>
